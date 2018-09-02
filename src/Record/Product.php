@@ -34,27 +34,110 @@ class Product extends AbstractRecord
             'key' => 'GTIN',
             'name' => 'GTIN product',
             'start' => 34,
-            'length' => 14
+            'length' => 14,
         ],
         4 => [
             'key' => 'StartDate',
             'name' => 'Ingangsdatum',
             'start' => 48,
-            'length' => 8
+            'length' => 8,
         ],
         5 => [
             'key' => 'Description',
             'name' => 'Productomschrijving',
             'start' => 56,
-            'length' => 70
+            'length' => 70,
         ],
         6 => [
             'key' => 'StatusCode',
             'name' => 'Statuscode',
             'start' => 126,
-            'length' => 3
+            'length' => 3,
         ],
-        // TODO the rest of the specifications
+        7 => [
+            'key' => 'SuccessorGTIN',
+            'name' => 'GTIN product opvolger',
+            'start' => 129,
+            'length' => 14,
+        ],
+        8 => [
+            'key' => 'SuccessorProductcode',
+            'name' => 'Productcode opvolger',
+            'start' => 143,
+            'length' => 20,
+        ],
+        9 => [
+            'key' => 'PredecessorGTIN',
+            'name' => 'GTIN product voorganger',
+            'start' => 163,
+            'length' => 14,
+        ],
+        10 => [
+            'key' => 'PredecessorProductcode',
+            'name' => 'Productcode voorganger',
+            'start' => 177,
+            'length' => 20,
+        ],
+        11 => [
+            'key' => 'WeightQuantity',
+            'name' => 'Netto gewicht',
+            'start' => 197,
+            'length' => 19,
+        ],
+        12 => [
+            'key' => 'WeightMeasureUnitCode',
+            'name' => 'Eenheid gewicht',
+            'start' => 216,
+            'length' => 3,
+        ],
+        13 => [
+            'key' => 'Brand',
+            'name' => 'Fabrikaat',
+            'start' => 219,
+            'length' => 35,
+        ],
+        14 => [
+            'key' => 'Model',
+            'name' => 'Productserie',
+            'start' => 254,
+            'length' => 35,
+        ],
+        15 => [
+            'key' => 'Version',
+            'name' => 'Producttype',
+            'start' => 289,
+            'length' => 35,
+        ],
+        16 => [
+            'key' => 'ProductgroupCode',
+            'name' => 'Code productgroep',
+            'start' => 324,
+            'length' => 4,
+        ],
+        17 => [
+            'key' => 'SequenceNumberProductClass',
+            'name' => 'Volgnummer productklasse',
+            'start' => 328,
+            'length' => 3,
+        ],
+        18 => [
+            'key' => 'StandardSheetVersion',
+            'name' => 'Versie normblad',
+            'start' => 331,
+            'length' => 2,
+        ],
+        19 => [
+            'key' => 'StandardSheetStatus',
+            'name' => 'Status normblad',
+            'start' => 333,
+            'length' => 1,
+        ],
+        20 => [
+            'key' => 'Deeplink',
+            'name' => 'Deeplink',
+            'start' => 334,
+            'length' => 512,
+        ],
     ];
 
     /**
