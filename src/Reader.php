@@ -123,17 +123,20 @@ class Reader extends AbstractReader
         $linesLeftCount = $this->file->lineCount();
         foreach ($this->file->read() as $line) {
 
-            yield new $this->record((int)$fileId, $formatter->format($line));
+            if ($line) {
+                yield new $this->record((int)$fileId, $formatter->format($line));
 
-            // Max lines
-            // If there is a maximum line count and it is reached break the foreach
-            $hasMaxLines = 0 !== $maxLines;
-            $isMaxLinesReached = $i === $maxLines;
+                // Max lines
+                // If there is a maximum line count and it is reached break the foreach
+                $hasMaxLines = 0 !== $maxLines;
+                $isMaxLinesReached = $i === $maxLines;
 
-            if ($hasMaxLines && $isMaxLinesReached) {
-                break;
+                if ($hasMaxLines && $isMaxLinesReached) {
+                    break;
+                }
+
             }
-
+            
             $linesLeftCount--;
             $i++;
         }
@@ -152,18 +155,21 @@ class Reader extends AbstractReader
         $linesLeftCount = $this->file->lineCount();
         foreach ($this->file->read() as $line) {
 
-            $records[] = new $this->record((int)$fileId, $formatter->format($line));
-            $isChunkMaxReached = $size === ($lineChunkCount + 1);
-            $isLastChunk = $size + $i > $linesLeftCount;
+            if ($line) {
+                $records[] = new $this->record((int)$fileId, $formatter->format($line));
+                $isChunkMaxReached = $size === ($lineChunkCount + 1);
+                $isLastChunk = $size + $i > $linesLeftCount;
 
-            if ($isChunkMaxReached || $isLastChunk) {
-                yield collect($records);
+                if ($isChunkMaxReached || $isLastChunk) {
+                    yield collect($records);
 
-                $records = [];
-                $lineChunkCount = 0;
+                    $records = [];
+                    $lineChunkCount = 0;
+                }
+
+                $lineChunkCount++;
             }
 
-            $lineChunkCount++;
             $linesLeftCount--;
             $i++;
         }
