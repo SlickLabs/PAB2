@@ -23,7 +23,7 @@ echo $productReader->lineCount() . PHP_EOL . PHP_EOL;
 
 echo '---- File; A CHUNK OF 5 ----' . PHP_EOL;
 /** @var \Tightenco\Collect\Support\Collection $lineChunk */
-foreach ($productReader->linesPerChunk(5)->read() as $lineChunk) {
+foreach ($productReader->chunk(5) as $lineChunk) {
     $lineChunk->each(function($line, $key) {
         /** @var RecordInterface $line */
         echo ($key + 1) .": ";
@@ -40,7 +40,7 @@ echo '---- File; Product; MAX LINES 1 ----' . PHP_EOL;
  * @var RecordInterface $line
  * @var \PAB2\Reader $productReader
  */
-foreach ($productReader->maxLines(1)->read() as $line) {
+foreach ($productReader->read(1) as $line) {
     print_r($line->getValues());
 }
 echo PHP_EOL . PHP_EOL;
@@ -50,7 +50,7 @@ echo '---- File; Product; MAX LINES 3 ----' . PHP_EOL;
  * @var RecordInterface $line
  * @var \PAB2\Reader $productReader
  */
-foreach ($productReader->maxLines(3)->read() as $key => $line) {
+foreach ($productReader->read(3) as $key => $line) {
     echo ($key + 1) .": ";
     print_r($line->getValues());
 }
@@ -68,7 +68,7 @@ echo $artLevReader->lineCount() . PHP_EOL . PHP_EOL;
 
 echo '---- File; Leveranciers Product; CHUNKS OF 5 ----' . PHP_EOL;
 /** @var \Tightenco\Collect\Support\Collection $lineChunk */
-foreach ($artLevReader->linesPerChunk(5)->read() as $lineChunk) {
+foreach ($artLevReader->chunk(5) as $lineChunk) {
     $lineChunk->each(function($line, $key) {
         /** @var RecordInterface $line */
         echo ($key + 1) .": ";

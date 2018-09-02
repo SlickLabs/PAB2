@@ -33,16 +33,6 @@ class Reader extends AbstractReader
     /**
      * @var int
      */
-    protected $maxLines = 0;
-
-    /**
-     * @var int
-     */
-    protected $linesPerChunk = 0;
-
-    /**
-     * @var int
-     */
     protected $line;
 
     /**
@@ -124,45 +114,21 @@ class Reader extends AbstractReader
      * @yield RecordInterface[]
      * @return \Generator[RecordInterface[]]
      */
-    public function read()
+    public function read($maxLines = 0)
     {
         $i = 1;
 
-        if ($this->hasChunks()) {
-            $lineChunkCount = 0;
-        }
-
-        $records = [];
         $formatter = new $this->formatter($this->record::getFields());
         $fileId = $this->file->getId();
         $linesLeftCount = $this->file->lineCount();
         foreach ($this->file->read() as $line) {
 
-            $record = new $this->record((int)$fileId, $formatter->format($line));
-
-            // Chunk it up
-            // Breaks the file up into chunks and yields the chunk
-            if ($this->hasChunks()) {
-                $records[] = $record;
-                $isChunkMaxReached = $this->linesPerChunk === ($lineChunkCount + 1);
-                $isLastChunk = $this->linesPerChunk + $i > $linesLeftCount;
-
-                if ($isChunkMaxReached || $isLastChunk) {
-                    yield collect($records);
-
-                    $records = [];
-                    $lineChunkCount = 0;
-                }
-
-                $lineChunkCount++;
-            } else {
-                yield $record;
-            }
+            yield new $this->record((int)$fileId, $formatter->format($line));
 
             // Max lines
             // If there is a maximum line count and it is reached break the foreach
-            $hasMaxLines = $this->hasMaxLines();
-            $isMaxLinesReached = $i === $this->maxLines;
+            $hasMaxLines = 0 !== $maxLines;
+            $isMaxLinesReached = $i === $maxLines;
 
             if ($hasMaxLines && $isMaxLinesReached) {
                 break;
@@ -172,21 +138,37 @@ class Reader extends AbstractReader
             $i++;
         }
 
-        unset($fileId);
-        unset($formatter);
-
-        // Resets the settings
-        $this->resetSettings();
+        unset($maxLines, $formatter, $hasMaxLines, $isMaxLinesReached, $fileId, $formatter, $linesLeftCount, $i);
     }
 
-    public function hasChunks()
+    public function chunk(int $size)
     {
-        return 0 !== $this->linesPerChunk;
-    }
+        $i = 1;
+        $lineChunkCount = 0;
 
-    public function hasMaxLines()
-    {
-        return 0 !== $this->maxLines;
+        $records = [];
+        $formatter = new $this->formatter($this->record::getFields());
+        $fileId = $this->file->getId();
+        $linesLeftCount = $this->file->lineCount();
+        foreach ($this->file->read() as $line) {
+
+            $records[] = new $this->record((int)$fileId, $formatter->format($line));
+            $isChunkMaxReached = $size === ($lineChunkCount + 1);
+            $isLastChunk = $size + $i > $linesLeftCount;
+
+            if ($isChunkMaxReached || $isLastChunk) {
+                yield collect($records);
+
+                $records = [];
+                $lineChunkCount = 0;
+            }
+
+            $lineChunkCount++;
+            $linesLeftCount--;
+            $i++;
+        }
+
+        unset($i, $lineChunkCount, $records, $formatter, $fileId, $linesLeftCount, $isChunkMaxReached, $isLastChunk);
     }
 
     public function resetSettings()
