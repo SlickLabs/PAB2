@@ -21,7 +21,7 @@ $productReader = new PAB2\Reader($productFile, $productReaderSettings);
 echo '---- File; LINE COUNT ----' . PHP_EOL;
 echo $productReader->lineCount() . PHP_EOL . PHP_EOL;
 
-echo '---- File; CHUNKS OF 5 ----' . PHP_EOL;
+echo '---- File; A CHUNK OF 5 ----' . PHP_EOL;
 /** @var \Tightenco\Collect\Support\Collection $lineChunk */
 foreach ($productReader->linesPerChunk(5)->read() as $lineChunk) {
     $lineChunk->each(function($line, $key) {
@@ -35,14 +35,14 @@ foreach ($productReader->linesPerChunk(5)->read() as $lineChunk) {
 }
 echo PHP_EOL . PHP_EOL;
 
-echo '---- File; MAX LINES 1 ----' . PHP_EOL;
+echo '---- File; Product; MAX LINES 1 ----' . PHP_EOL;
 /** @var \Tightenco\Collect\Support\Collection $lines */
 foreach ($productReader->maxLines(1)->read() as $lines) {
     print_r($lines->first()->getValues());
 }
 echo PHP_EOL . PHP_EOL;
 
-echo '---- File; MAX LINES 3 ----' . PHP_EOL;
+echo '---- File; Product; MAX LINES 3 ----' . PHP_EOL;
 /** @var \Tightenco\Collect\Support\Collection $lines */
 foreach ($productReader->maxLines(3)->read() as $lines) {
     $lines->each(function($line, $key) {
@@ -53,6 +53,31 @@ foreach ($productReader->maxLines(3)->read() as $lines) {
     });
 }
 echo PHP_EOL . PHP_EOL;
+
+$artLevReaderSettings = [
+    PAB2\Reader::SETTING_FORMATTER => \PAB2\ArrayFormatter::class,
+    PAB2\Reader::SETTING_RECORD_CLASS => \PAB2\Record\ArtLev::class,
+];
+$artLevFile = new \PAB2\File('artLev', $dir . '/files/test/ArtLev.txt');
+$artLevReader = new PAB2\Reader($artLevFile, $artLevReaderSettings);
+
+echo '---- File; Leveranciers Product; LINE COUNT ----' . PHP_EOL;
+echo $artLevReader->lineCount() . PHP_EOL . PHP_EOL;
+
+echo '---- File; Leveranciers Product; CHUNKS OF 5 ----' . PHP_EOL;
+/** @var \Tightenco\Collect\Support\Collection $lineChunk */
+foreach ($artLevReader->linesPerChunk(5)->read() as $lineChunk) {
+    $lineChunk->each(function($line, $key) {
+        /** @var RecordInterface $line */
+        echo ($key + 1) .": ";
+        print_r($line->getValues());
+        echo PHP_EOL;
+    });
+    $artLevReader->resetSettings();
+    break;
+}
+echo PHP_EOL . PHP_EOL;
+
 
 //echo '---- File; TEST ----' . PHP_EOL;
 ///** @var \Tightenco\Collect\Support\Collection $lineChunk */

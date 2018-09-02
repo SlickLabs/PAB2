@@ -18,7 +18,7 @@ class ArrayFormatter extends AbstractFormatter
     {
         $values = [];
         foreach ($this->conditions as $condition) {
-            $values[$condition['key']] = trim(substr($line, $condition['start'], $condition['length']));
+            $values[$condition['key']] = trim(substr($line, ($condition['start'] - 1), $condition['length']));
         }
 
         return $values;
