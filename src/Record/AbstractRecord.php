@@ -33,11 +33,18 @@ abstract class AbstractRecord implements RecordInterface
     public static $fields = [];
 
     /**
+     * @var integer
+     */
+    protected $fileId;
+
+    /**
      * AbstractRecord constructor.
      * @param string $line
      */
-    public function __construct(array $values)
+    public function __construct(int $fileId, array $values)
     {
+        $this->fileId = $fileId;
+
         $this->setValues($values);
     }
 
@@ -149,5 +156,43 @@ abstract class AbstractRecord implements RecordInterface
     public static function getFields()
     {
         return static::$fields;
+    }
+    /**
+     * @return integer
+     */
+    public function getFileId()
+    {
+        return $this->fileId;
+    }
+
+    /**
+     * @param $key
+     * @param null $default
+     * @return null
+     */
+    public function getValue(string $key, $default = null)
+    {
+        return (isset($this->values[$key]))? $this->values[$key] : $default;
+    }
+
+    /**
+     * @return string
+     */
+    public function toString()
+    {
+        $string = '';
+        $values = $this->getValues();
+
+        foreach (self::$fields as $field) {
+
+            $value = '';
+            if ($values[$field['key']]) {
+                $value = $values[$field['key']];
+            }
+
+            $string .= str_pad($value, $field['length'], ' ', STR_PAD_RIGHT);
+        }
+
+        return $string;
     }
 }

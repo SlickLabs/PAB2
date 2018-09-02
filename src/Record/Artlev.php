@@ -434,59 +434,14 @@ class ArtLev extends AbstractRecord
     protected $type = 'ArtLev';
 
     /**
-     * @var integer
-     */
-    protected $fileId;
-
-    /**
      * ArtLev constructor.
      * @param array $values
      */
     public function __construct($fileId, array $values)
     {
-        $this->fileId = $fileId;
         $this->key = 'art_lev';
         $this->title = 'ArtLev';
 
-        parent::__construct($values);
-    }
-
-    /**
-     * @return integer
-     */
-    public function getFileId()
-    {
-        return $this->fileId;
-    }
-
-    /**
-     * @param $key
-     * @param null $default
-     * @return null
-     */
-    public function getValue(string $key, $default = null)
-    {
-        return (isset($this->values[$key]))? $this->values[$key] : $default;
-    }
-
-    /**
-     * @return string
-     */
-    public function toString()
-    {
-        $string = '';
-        $values = $this->getValues();
-
-        foreach (self::$fields as $field) {
-
-            $value = '';
-            if ($values[$field['key']]) {
-                $value = $values[$field['key']];
-            }
-
-            $string .= str_pad($value, $field['length'], ' ', STR_PAD_RIGHT);
-        }
-
-        return $string;
+        parent::__construct($fileId, $values);
     }
 }

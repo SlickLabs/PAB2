@@ -138,7 +138,7 @@ class Reader extends AbstractReader
         $linesLeftCount = $this->file->lineCount();
         foreach ($this->file->read() as $line) {
 
-            $file[] = new $this->record($fileId, $formatter->format($line));
+            $file[] = new $this->record((int)$fileId, $formatter->format($line));
 
             // Max lines
             // If there is max lineCount break the foreach
