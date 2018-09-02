@@ -36,21 +36,23 @@ foreach ($productReader->linesPerChunk(5)->read() as $lineChunk) {
 echo PHP_EOL . PHP_EOL;
 
 echo '---- File; Product; MAX LINES 1 ----' . PHP_EOL;
-/** @var \Tightenco\Collect\Support\Collection $lines */
-foreach ($productReader->maxLines(1)->read() as $lines) {
-    print_r($lines->first()->getValues());
+/**
+ * @var RecordInterface $line
+ * @var \PAB2\Reader $productReader
+ */
+foreach ($productReader->maxLines(1)->read() as $line) {
+    print_r($line->getValues());
 }
 echo PHP_EOL . PHP_EOL;
 
 echo '---- File; Product; MAX LINES 3 ----' . PHP_EOL;
-/** @var \Tightenco\Collect\Support\Collection $lines */
-foreach ($productReader->maxLines(3)->read() as $lines) {
-    $lines->each(function($line, $key) {
-        /** @var RecordInterface $line */
-        echo ($key + 1) .": ";
-        print_r($line->getValues());
-        echo PHP_EOL;
-    });
+/**
+ * @var RecordInterface $line
+ * @var \PAB2\Reader $productReader
+ */
+foreach ($productReader->maxLines(3)->read() as $key => $line) {
+    echo ($key + 1) .": ";
+    print_r($line->getValues());
 }
 echo PHP_EOL . PHP_EOL;
 

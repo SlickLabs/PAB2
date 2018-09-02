@@ -132,37 +132,40 @@ class Reader extends AbstractReader
             $lineChunkCount = 0;
         }
 
-        $file = [];
+        $records = [];
         $formatter = new $this->formatter($this->record::getFields());
         $fileId = $this->file->getId();
         $linesLeftCount = $this->file->lineCount();
         foreach ($this->file->read() as $line) {
 
-            $file[] = new $this->record((int)$fileId, $formatter->format($line));
+            $record = new $this->record((int)$fileId, $formatter->format($line));
+
+            // Chunk it up
+            // Breaks the file up into chunks and yields the chunk
+            if ($this->hasChunks()) {
+                $records[] = $record;
+                $isChunkMaxReached = $this->linesPerChunk === ($lineChunkCount + 1);
+                $isLastChunk = $this->linesPerChunk + $i > $linesLeftCount;
+
+                if ($isChunkMaxReached || $isLastChunk) {
+                    yield collect($records);
+
+                    $records = [];
+                    $lineChunkCount = 0;
+                }
+
+                $lineChunkCount++;
+            } else {
+                yield $record;
+            }
 
             // Max lines
-            // If there is max lineCount break the foreach
+            // If there is a maximum line count and it is reached break the foreach
             $hasMaxLines = $this->hasMaxLines();
             $isMaxLinesReached = $i === $this->maxLines;
 
             if ($hasMaxLines && $isMaxLinesReached) {
                 break;
-            }
-
-            // Chunk it up
-            // Breaks the file up into chunks and yields the chunk
-            if ($this->hasChunks()) {
-                $isChunkMaxReached = $this->linesPerChunk === ($lineChunkCount + 1);
-                $isLastChunk = $this->linesPerChunk + $i > $linesLeftCount;
-
-                if ($isChunkMaxReached || $isLastChunk) {
-                    yield collect($file);
-
-                    $file = [];
-                    $lineChunkCount = 0;
-                }
-
-                $lineChunkCount++;
             }
 
             $linesLeftCount--;
@@ -171,10 +174,6 @@ class Reader extends AbstractReader
 
         unset($fileId);
         unset($formatter);
-
-        if (!$this->hasChunks()) {
-            yield collect($file);
-        }
 
         // Resets the settings
         $this->resetSettings();
