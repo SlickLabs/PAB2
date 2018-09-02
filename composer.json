@@ -1,0 +1,36 @@
+{
+  "name": "slicklabs/pab2",
+  "type": "library",
+  "description": "PAB2 reader",
+  "keywords": [
+    "2ba",
+    "pab",
+    "rexel",
+    "technische unie"
+  ],
+  "homepage": "https://wefabric.nl/",
+  "license": "MIT",
+  "authors": [
+    {
+      "name": "Nathan Jansen",
+      "email": "nathan.jansen@wefabric.nl"
+    },
+    {
+      "name": "Leo Flapper",
+      "email": "leo.flapper@slicklabs.nl"
+    }
+  ],
+  "require": {
+    "tightenco/collect": "^5.6"
+  },
+  "autoload": {
+    "psr-4": {
+      "PAB2\\": "src/"
+    }
+  },
+  "autoload-dev": {
+    "psr-4": {
+      "PAB2\\": "src/"
+    }
+  }
+}
