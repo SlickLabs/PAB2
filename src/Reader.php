@@ -3,7 +3,6 @@
 namespace PAB2;
 
 use PAB2\Record\RecordInterface;
-use Tightenco\Collect\Support\Arr;
 
 /**
  * Class Reader
@@ -11,8 +10,10 @@ use Tightenco\Collect\Support\Arr;
  */
 class Reader extends AbstractReader
 {
+    /**
+     * Setting keys
+     */
     const SETTING_FORMATTER = 'formatter';
-
     const SETTING_RECORD_CLASS = 'record_class';
 
     /**
@@ -39,6 +40,7 @@ class Reader extends AbstractReader
      * Reader constructor.
      * @param File $file
      * @param array $settings
+     * @throws \ReflectionException
      */
     public function __construct(File $file, array $settings = [])
     {
@@ -48,6 +50,7 @@ class Reader extends AbstractReader
 
     /**
      * @param array $settings
+     * @throws \ReflectionException
      */
     public function setSettings(array $settings)
     {
@@ -87,27 +90,6 @@ class Reader extends AbstractReader
         $this->record = $record;
     }
 
-    public function maxLines($maxLines)
-    {
-        $this->maxLines = $maxLines;
-
-        return $this;
-    }
-
-    public function linesPerChunk(int $amount)
-    {
-        $this->linesPerChunk = $amount;
-
-        return $this;
-    }
-
-    public function line(int $line)
-    {
-        $this->line = $line;
-
-        return $this;
-    }
-
     /**
      * {@inheritdoc}
      * @throws Exception\FileException
@@ -118,6 +100,7 @@ class Reader extends AbstractReader
     {
         $i = 1;
 
+        /** @var FormatterInterface $formatter */
         $formatter = new $this->formatter($this->record::getFields());
         $fileId = $this->file->getId();
         $linesLeftCount = $this->file->lineCount();
@@ -136,7 +119,7 @@ class Reader extends AbstractReader
                 }
 
             }
-            
+
             $linesLeftCount--;
             $i++;
         }
@@ -144,12 +127,18 @@ class Reader extends AbstractReader
         unset($maxLines, $formatter, $hasMaxLines, $isMaxLinesReached, $fileId, $formatter, $linesLeftCount, $i);
     }
 
+    /**
+     * @param int $size
+     * @return \Generator
+     * @throws Exception\FileException
+     */
     public function chunk(int $size)
     {
         $i = 1;
         $lineChunkCount = 0;
 
         $records = [];
+        /** @var FormatterInterface $formatter */
         $formatter = new $this->formatter($this->record::getFields());
         $fileId = $this->file->getId();
         $linesLeftCount = $this->file->lineCount();
