@@ -283,7 +283,7 @@ class ArtLev extends AbstractRecord
             'end' => 425,
         ],
         31 => [
-            'key' => 'MinimumOrderQantity',
+            'key' => 'MinimumOrderQuantity',
             'name' => 'Minimum afname',
             'length' => 16,
             'format' => 'D 12.3',
