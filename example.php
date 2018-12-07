@@ -61,7 +61,7 @@ $artLevReaderSettings = [
     PAB2\Reader::SETTING_FORMATTER => \PAB2\ArrayFormatter::class,
     PAB2\Reader::SETTING_RECORD_CLASS => \PAB2\Record\ArtLev::class,
 ];
-$artLevFile = new \PAB2\File('artLev', $dir . '/files/test/ArtLev.txt');
+$artLevFile = new \PAB2\File('ArtLev', $dir . '/files/test/ArtLev.txt');
 $artLevReader = new PAB2\Reader($artLevFile, $artLevReaderSettings);
 
 echo '---- File; Leveranciers Product; LINE COUNT ----' . PHP_EOL;
