@@ -14,7 +14,7 @@ class Product extends AbstractRecord
     public static $fields = [
 
         1 => [
-            'key' => 'Mutationcode',
+            'key' => 'MutationCode',
             'name' => 'Mutatiecode',
             'length' => 1,
             'format' => 'N',
